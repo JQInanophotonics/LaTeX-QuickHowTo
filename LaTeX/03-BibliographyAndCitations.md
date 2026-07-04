@@ -2,9 +2,21 @@
 
 ## Papers: use the journal's template as-is (usually REVTeX)
 
-Group papers are written against a journal's own class — usually **REVTeX** (`revtex4-2`, for Physical Review/APS journals) or whatever class the target journal provides. **Don't touch the template's bibliography setup.** It already defines its own bibliography style and its own `\bibliography{...}` handling — supply your `.bib` file, `\cite{key}` in the text, and let the class do the rest. The class dictates the bibliography system here, the same way [02](02-Compiling.md) says the document dictates the engine — not the other way around.
+Group papers are written against a journal's own class — usually **REVTeX** (`revtex4-2`, for Physical Review/APS journals) or whatever class the target journal provides. **Don't touch the template's bibliography setup** — the class already defines the style; the one thing YOU add is the line pointing at your `.bib` file:
 
-Under the hood, that's still the classic `bibtex` tool, not `biblatex`/`biber` (see [02](02-Compiling.md) for the raw pdflatex → bibtex → pdflatex → pdflatex sequence this runs). You don't need to run any of it by hand — recompile with `latexmk -pdf file.tex` and it detects the bibliography and reruns `bibtex` automatically until everything settles.
+```latex
+\documentclass[aps,prl,reprint]{revtex4-2}
+...
+\begin{document}
+...
+As shown by \cite{BraschScience2016}.
+...
+\bibliography{references}   % <- THIS is the line that points to references.bib. Add it, don't touch anything else.
+\end{document}
+```
+`\bibliography{references}` (no `.bib` extension) goes near the end of the document, after your text and before `\end{document}` — that's it, that's the whole bibliography setup for a paper. `\cite{key}` anywhere in the text is what actually pulls each entry in; `\bibliography{...}` just tells the class which `.bib` file to pull from.
+
+Under the hood this runs the classic `bibtex` tool, not `biblatex`/`biber` (see [02](02-Compiling.md) for the raw pdflatex → bibtex → pdflatex → pdflatex sequence). You don't run any of it by hand — recompile with `latexmk -pdf file.tex` and it detects `\bibliography{...}` and reruns `bibtex` automatically until everything settles.
 
 ## What a `.bib` entry looks like
 
