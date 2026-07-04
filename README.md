@@ -6,6 +6,13 @@ Every paper the group writes and every talk built in [JqiNanoBeamerTemplate](htt
 
 Read the pages in order the first time — each builds on the last; use them, and the rules below, as a checklist afterwards — same spirit as [ScientificDataManagement](https://github.com/JQInanophotonics/ScientificDataManagement).
 
+## Installing locally
+
+```bash
+brew install --cask mactex   # macOS
+```
+Windows: install [MiKTeX](https://miktex.org/download). Linux: `sudo apt install texlive-full` (Debian/Ubuntu) or `sudo pacman -S texlive-meta` (Arch). Check it worked: `pdflatex --version`. Full details, including a lighter macOS option and older-distro fallbacks: [01 — Installing LaTeX](LaTeX/01-Installing.md).
+
 ## Cheat sheet
 
 | Command | What it does |
