@@ -1,6 +1,6 @@
 # 05 — Neovim setup
 
-VS Code ([04](04-VSCodeSetup.md)) is the easiest path. This page is for anyone who already lives in Neovim and wants the same compile/preview/error-highlighting loop there, via [vimtex](https://github.com/lervag/vimtex) (compiling + SyncTeX + folding) and [texlab](https://github.com/latex-lsp/texlab) (autocomplete, diagnostics, go-to-definition, via the Language Server Protocol).
+VS Code ([04](04-VSCodeSetup.md)) is the easiest path. This page is for anyone who already lives in Neovim — it walks through this repo author's actual config, via [vimtex](https://github.com/lervag/vimtex) (compiling + SyncTeX + folding) and [texlab](https://github.com/latex-lsp/texlab) (autocomplete, diagnostics, via the Language Server Protocol). The real files are copied into [`dotfiles/`](dotfiles/) alongside this page — drop them into your own config and adjust paths/keymaps to taste.
 
 ## Install texlab
 
@@ -8,43 +8,98 @@ VS Code ([04](04-VSCodeSetup.md)) is the easiest path. This page is for anyone w
 brew install texlab       # macOS
 cargo install texlab      # any OS, via Rust's package manager
 ```
-Linux/Windows package managers may also carry `texlab` directly (e.g. `pacman -S texlab` on Arch).
+Linux/Windows package managers may also carry `texlab` directly (e.g. `pacman -S texlab` on Arch). Confirm it's on your `PATH`: `texlab --version`.
 
-## Minimal config (lazy.nvim)
+## vimtex — [`dotfiles/vimtex.lua`](dotfiles/vimtex.lua)
+
+The parts that matter for any LaTeX setup:
 
 ```lua
--- lua/plugins/latex.lua
-return {
-  {
-    "lervag/vimtex",
-    lazy = false,
-    init = function()
-      -- macOS: "skim" · Linux: "zathura" · Windows: "sumatrapdf"
-      vim.g.vimtex_view_method = "skim"
+vim.g.vimtex_view_method = "skim"   -- macOS; "zathura" on Linux, "sumatrapdf" on Windows
 
-      vim.g.vimtex_compiler_latexmk = {
-        options = {
-          "-lualatex",             -- see 02-Compiling.md — matches JqiNanoBeamerTemplate
-          "-verbose",
-          "-file-line-error",
-          "-synctex=1",
-          "-interaction=nonstopmode",
-        },
-      }
-    end,
-  },
-  {
-    "neovim/nvim-lspconfig",
-    ft = { "tex", "plaintex", "bib" },
-    config = function()
-      vim.lsp.config("texlab", {})
-      vim.lsp.enable("texlab")
-    end,
+vim.g.vimtex_toc_config = {
+  split_pos = 'topleft',
+  split_width = 6,
+}
+
+vim.g.vimtex_fold_enabled = 1
+vim.g.vimtex_fold_manual = 0
+
+vim.g.vimtex_compiler_latexmk = {
+  options = {
+    '-verbose',
+    '-file-line-error',
+    '-synctex=1',
+    '-interaction=nonstopmode',
   },
 }
 ```
+Note there's no engine flag (`-lualatex`/`-xelatex`) in the default options — see [02](02-Compiling.md) for why the engine has to match the document. Instead, the full file defines a `switch_latex_compiler(engine)` helper and three commands to flip it per project:
 
-This gives you: `fontspec`-aware LuaLaTeX compiling on save, SyncTeX forward/inverse search through Skim/Zathura/SumatraPDF, and texlab-powered autocomplete/diagnostics.
+```lua
+vim.api.nvim_create_user_command('VimtexCompilerLuaLaTeX', function()
+  switch_latex_compiler('lualatex')
+end, {})
+
+vim.api.nvim_create_user_command('VimtexCompilerPDFLaTeX', function()
+  switch_latex_compiler('pdflatex')
+end, {})
+
+vim.api.nvim_create_user_command('VimtexCompilerXeLaTeX', function()
+  switch_latex_compiler('xelatex')
+end, {})
+```
+Run `:VimtexCompilerLuaLaTeX` once per project that needs it (anything built from [JqiNanoBeamerTemplate](https://github.com/JQInanophotonics/JqiNanoBeamerTemplate) does) before your first `\ll`.
+
+The rest of [`dotfiles/vimtex.lua`](dotfiles/vimtex.lua) is a custom folding display for a personal `\refcom` macro (not a standard LaTeX command — it's from the author's own preamble) — safe to delete if you don't use that macro; it doesn't affect compiling, SyncTeX, or the compiler-switch commands above.
+
+## texlab — [`dotfiles/texlab.lua`](dotfiles/texlab.lua)
+
+The LaTeX-relevant part:
+
+```lua
+vim.lsp.config("texlab", {
+  cmd = { exe },  -- exe resolved via vim.fn.exepath("texlab"), falling back to a known install path
+  capabilities = capabilities,
+})
+vim.lsp.enable("texlab")
+```
+The full file also wires up completion capabilities via `cmp_nvim_lsp` (optional — only if you use `nvim-cmp`) and, in the same plugin spec, configures a Python language server (`basedpyright`/`pyright`/`pylsp`) for unrelated Python work — that block is incidental to this file's history, not part of the LaTeX setup; delete it if you don't want Python LSP tagging along.
+
+## Snippets — [`dotfiles/tex-snippets.lua`](dotfiles/tex-snippets.lua)
+
+LuaSnip environment templates and math shortcuts, loaded only for `.tex`/`.bib` buffers. A couple of representative entries:
+
+```lua
+-- BEQ -> \begin{equation}...\end{equation}, autotriggered outside math mode
+{ trig = "BEQ", exp = [[
+\begin{equation}
+  <>
+  \label{eq:<>}
+\end{equation}]] }
+
+-- Greek letters, math mode only: @a -> \alpha, @D -> \Delta, @8 -> \infty
+{ trig = "@a", exp = "\\alpha" }
+```
+The full file ([`dotfiles/tex-snippets.lua`](dotfiles/tex-snippets.lua), ~370 lines) covers every Greek letter, structures like `\frac`/`\sqrt`/bracket pairs (`@/`, `@2`, `@(`...), figure/table/equation environment skeletons (`BFI`, `BTA`, `BEQ`...), and Beamer-specific snippets (`;frame`, `;columns`).
+
+## Format-toggle keymaps — [`dotfiles/tex-ftplugin.lua`](dotfiles/tex-ftplugin.lua)
+
+Context-aware shortcuts that expand or wrap-selection differently depending on whether the cursor is in math mode:
+
+| Keys | Text mode | Math mode |
+|---|---|---|
+| `<C-l><C-b>` | `\textbf{}` | `\mathbf{}` |
+| `<C-l><C-i>` | `\textit{}` | `\mathit{}` |
+| `<C-l><C-e>` | `\emph{}` | `\emph{}` |
+| `<C-l><C-p>` | `\textsuperscript{}` | `^{}` |
+| `<C-l><C-->` | `\textsubscript{}` | `_{}` |
+
+In insert mode these expand at the cursor; in visual mode they wrap the current selection (and toggle back to plain text if the selection is already wrapped). The full file also sets the buffer-local foldtext for the `\refcom` macro mentioned above.
+
+## Syntax tweak — [`dotfiles/tex-syntax.vim`](dotfiles/tex-syntax.vim)
+
+A small patch so `siunitx`'s `\qty`/`\SI` number arguments still get math-mode syntax highlighting/concealment inside text mode. Optional — only relevant if you use `siunitx`.
 
 ## Everyday keys (vimtex defaults, `<localleader>` = `\` unless you've remapped it)
 
@@ -57,9 +112,5 @@ This gives you: `fontspec`-aware LuaLaTeX compiling on save, SyncTeX forward/inv
 | `\le` | Show errors in the quickfix list |
 
 Inverse search (clicking in the PDF to jump back into Neovim) needs the viewer pointed at a running Neovim instance — the exact command depends on your vimtex version, so run `:help vimtex-view-skim` (or `-zathura`/`-sumatrapdf`) inside Neovim for the current syntax rather than copying a possibly-stale one from here.
-
-## Want the full setup?
-
-This is a deliberately minimal starting point. The author's actual config adds custom section folding, context-aware math/text snippets, and [TeXpresso](https://github.com/let-def/texpresso) live preview — see [gregmoille/nvim_config](https://github.com/gregmoille/nvim_config) (`lua/plugins/vimtex.lua`, `lua/plugins/texlab.lua`, `snippets/tex.lua`) for the complete version.
 
 Next: [06 — Syntax cheat sheet](06-SyntaxCheatSheet.md)

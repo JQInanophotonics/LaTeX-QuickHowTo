@@ -51,7 +51,7 @@ add the paper in Zotero → Better BibTeX generates the citekey → \cite{key} i
 | [02 — Compiling](LaTeX/02-Compiling.md) | pdflatex vs. xelatex vs. lualatex, `latexmk`, reading a compile error |
 | [03 — Bibliography and citations](LaTeX/03-BibliographyAndCitations.md) | biblatex/biber, the citekey convention, Zotero + Better BibTeX |
 | [04 — VS Code setup](LaTeX/04-VSCodeSetup.md) | LaTeX Workshop, SyncTeX (built-in tab viewer, or Skim/Zathura/SumatraPDF) |
-| [05 — Neovim setup](LaTeX/05-NeovimSetup.md) | vimtex + texlab, minimal config, link to the full personal dotfiles |
+| [05 — Neovim setup](LaTeX/05-NeovimSetup.md) | vimtex + texlab, with real, copyable dotfiles included |
 | [06 — Syntax cheat sheet](LaTeX/06-SyntaxCheatSheet.md) | A minimal working document and the syntax to test your setup |
 
 ## What's in this repo
@@ -66,10 +66,16 @@ LaTeX-QuickHowTo/
     ├── 03-BibliographyAndCitations.md
     ├── 04-VSCodeSetup.md
     ├── 05-NeovimSetup.md
-    └── 06-SyntaxCheatSheet.md
+    ├── 06-SyntaxCheatSheet.md
+    └── dotfiles/
+        ├── vimtex.lua
+        ├── texlab.lua
+        ├── tex-ftplugin.lua
+        ├── tex-snippets.lua
+        └── tex-syntax.vim
 ```
 
-No binary assets live here — same as [QuickStartGit](https://github.com/JQInanophotonics/QuickStartGit).
+No binary assets — the `dotfiles/` folder is real, plain-text Neovim config (see [05](LaTeX/05-NeovimSetup.md)), same spirit as [QuickStartGit](https://github.com/JQInanophotonics/QuickStartGit)'s all-Markdown approach.
 
 ## See also
 
