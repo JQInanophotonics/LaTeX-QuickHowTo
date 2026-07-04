@@ -11,9 +11,9 @@ Read the pages in order the first time — each builds on the last; use them, an
 | Command | What it does |
 |---|---|
 | `pdflatex --version` | Confirm a LaTeX distribution is installed |
-| `latexmk -lualatex file.tex` | Compile with LuaLaTeX (needed for `fontspec`, incl. the group's Beamer template) |
-| `latexmk -pdf file.tex` | Compile with plain pdflatex |
-| `latexmk -pvc -lualatex file.tex` | Recompile automatically on every save |
+| `latexmk -pdf file.tex` | Compile — default, this is what papers use |
+| `latexmk -pvc -pdf file.tex` | Recompile automatically on every save |
+| `latexmk -lualatex file.tex` | Compile with LuaLaTeX — **only** for Beamer talks from JqiNanoBeamerTemplate |
 | `latexmk -c` | Delete aux/log files, keep the PDF |
 | `\cite{BraschScience2016}` | Citation — key format is `<LastName><Journal><Year>` |
 | `Cmd`/`Ctrl`-click (VS Code PDF tab) | Jump between source and PDF (SyncTeX) |
@@ -36,7 +36,7 @@ add the paper in Zotero → Better BibTeX generates the citekey → \cite{key} i
 
 1. **LaTeX is markup, not WYSIWYG** — you write plain text, then compile it to PDF. See [00](LaTeX/00-WhatIsLatex.md).
 2. **Install a full distribution once per machine** — MacTeX/MiKTeX/TeX Live. See [01](LaTeX/01-Installing.md).
-3. **Match the engine to the document.** Anything using `fontspec` — including the group's Beamer template — needs `lualatex`, not plain `pdflatex`. See [02](LaTeX/02-Compiling.md).
+3. **Papers use plain `pdflatex` — only Beamer talks need LuaLaTeX.** The group's Beamer template needs `lualatex` specifically (it uses `fontspec`); nothing about paper writing does. See [02](LaTeX/02-Compiling.md).
 4. **Always compile through `latexmk`**, never call the engine directly — it reruns the right passes for you (bibliography, cross-references). See [02](LaTeX/02-Compiling.md).
 5. **Never hand-type a citekey.** Let Zotero + Better BibTeX generate `<LastName><Journal><Year>` for you. See [03](LaTeX/03-BibliographyAndCitations.md).
 6. **VS Code + LaTeX Workshop is the easiest path** — one extension, SyncTeX built in. See [04](LaTeX/04-VSCodeSetup.md).

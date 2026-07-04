@@ -40,7 +40,7 @@ As shown by \cite{BraschScience2016}.
 \printbibliography
 \end{document}
 ```
-Compile with `latexmk -lualatex file.tex` ([02](02-Compiling.md)) — this needs `references.bib` with a `BraschScience2016` entry to resolve the citation ([03](03-BibliographyAndCitations.md)); delete the bibliography lines to compile without one.
+Compile with `latexmk -pdf file.tex` — plain `pdflatex` is all this needs (no `fontspec`, so no LuaLaTeX; see [02](02-Compiling.md)). It needs `references.bib` with a `BraschScience2016` entry to resolve the citation ([03](03-BibliographyAndCitations.md)); delete the bibliography lines to compile without one.
 
 ## Quick reference
 

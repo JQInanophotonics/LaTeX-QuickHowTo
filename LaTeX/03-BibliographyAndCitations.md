@@ -10,7 +10,7 @@ As shown in \cite{BraschScience2016}.
 ...
 \printbibliography
 ```
-Compiling needs an extra tool pass beyond the engine itself — `biber` reads `references.bib` and resolves every `\cite`. Full sequence: engine → biber → engine → engine (two more passes to settle numbering and cross-references). **Don't run this by hand** — `latexmk -lualatex file.tex` (see [02](02-Compiling.md)) detects the `\addbibresource` and reruns `biber` automatically; just recompile with `latexmk` until it stabilizes.
+Compiling needs an extra tool pass beyond the engine itself — `biber` reads `references.bib` and resolves every `\cite`. Full sequence: engine → biber → engine → engine (two more passes to settle numbering and cross-references). This is independent of which engine you use — a paper's bibliography compiles the same way under plain `pdflatex` as a Beamer talk's would under `lualatex` (see [02](02-Compiling.md) for which engine your document needs). **Don't run this by hand** — `latexmk -pdf file.tex` (or `-lualatex`/`-xelatex`, whichever engine applies) detects the `\addbibresource` and reruns `biber` automatically; just recompile with `latexmk` until it stabilizes.
 
 The older `\bibliography{...}` + `bibtex` combo still works and follows the same idea (engine → bibtex → engine → engine), but `biblatex`/`biber` is the modern, more capable version — use it for anything new.
 
