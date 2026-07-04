@@ -19,9 +19,9 @@ TeX Live (below) works identically on Windows too, if you'd rather have everythi
 
 ```bash
 sudo apt install texlive-full      # Debian/Ubuntu — large but complete
-sudo pacman -S texlive-most        # Arch
+sudo pacman -S texlive-meta        # Arch — complete metapackage
 ```
-`texlive-full`/`texlive-most` avoids the "missing package" scavenger hunt later. If your distro's version is old, install the latest directly from [tug.org/texlive](https://tug.org/texlive/acquire-netinstall.html) instead.
+`texlive-full`/`texlive-meta` avoids the "missing package" scavenger hunt later. If your distro's version is old, install the latest directly from [tug.org/texlive](https://tug.org/texlive/acquire-netinstall.html) instead.
 
 ## Verify the install
 

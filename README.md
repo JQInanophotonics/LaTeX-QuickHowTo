@@ -17,6 +17,7 @@ Read the pages in order the first time — each builds on the last; use them, an
 | `latexmk -c` | Delete aux/log files, keep the PDF |
 | `\cite{BraschScience2016}` | Citation — key format is `<LastName><Journal><Year>` |
 | `Cmd`/`Ctrl`-click (VS Code PDF tab) | Jump between source and PDF (SyncTeX) |
+| `Ctrl+Alt+B` / `Cmd+Option+B` (VS Code) | Manually trigger a compile |
 | `\ll` / `\lv` (Neovim, vimtex) | Compile / forward-search to PDF |
 
 ## Everyday workflow
