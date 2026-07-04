@@ -1,18 +1,26 @@
 # 03 — Bibliography and citations
 
-## biblatex + biber (the modern default)
+## Papers: use the journal's template as-is (usually REVTeX)
 
-```latex
-\usepackage[backend=biber, style=numeric]{biblatex}
-\addbibresource{references.bib}
-...
-As shown in \cite{BraschScience2016}.
-...
-\printbibliography
+Group papers are written against a journal's own class — usually **REVTeX** (`revtex4-2`, for Physical Review/APS journals) or whatever class the target journal provides. **Don't touch the template's bibliography setup.** It already defines its own bibliography style and its own `\bibliography{...}` handling — supply your `.bib` file, `\cite{key}` in the text, and let the class do the rest. The class dictates the bibliography system here, the same way [02](02-Compiling.md) says the document dictates the engine — not the other way around.
+
+Under the hood, that's still the classic `bibtex` tool, not `biblatex`/`biber` (see [02](02-Compiling.md) for the raw pdflatex → bibtex → pdflatex → pdflatex sequence this runs). You don't need to run any of it by hand — recompile with `latexmk -pdf file.tex` and it detects the bibliography and reruns `bibtex` automatically until everything settles.
+
+## What a `.bib` entry looks like
+
+```bibtex
+@article{BraschScience2016,
+  author  = {Brasch, Victor and Geiselmann, Michael and Herr, Tobias and Lihachev, Grigory
+             and Pfeiffer, Martin H. P. and Gorodetsky, Michael L. and Kippenberg, Tobias J.},
+  title   = {Photonic chip-based optical frequency comb using soliton Cherenkov radiation},
+  journal = {Science},
+  year    = {2016},
+  volume  = {351},
+  number  = {6271},
+  pages   = {357--360},
+}
 ```
-Compiling needs an extra tool pass beyond the engine itself — `biber` reads `references.bib` and resolves every `\cite`. Full sequence: engine → biber → engine → engine (two more passes to settle numbering and cross-references). This is independent of which engine you use — a paper's bibliography compiles the same way under plain `pdflatex` as a Beamer talk's would under `lualatex` (see [02](02-Compiling.md) for which engine your document needs). **Don't run this by hand** — `latexmk -pdf file.tex` (or `-lualatex`/`-xelatex`, whichever engine applies) detects the `\addbibresource` and reruns `biber` automatically; just recompile with `latexmk` until it stabilizes.
-
-The older `\bibliography{...}` + `bibtex` combo still works and follows the same idea (engine → bibtex → engine → engine), but `biblatex`/`biber` is the modern, more capable version — use it for anything new.
+Entry type (`@article`, `@inproceedings`, `@book`, ...) comes first, then the citekey (`BraschScience2016` — see below), then `field = {value}` pairs, comma-separated. You'll rarely type one of these by hand — Zotero + Better BibTeX (below) generates it straight from a DOI.
 
 ## Citation keys: `<LastName><Journal><Year>`
 
@@ -26,13 +34,25 @@ This makes a citekey guessable from the paper itself — no separate lookup tabl
 
 ## Generating it automatically: Zotero + Better BibTeX
 
-Typing citekeys by hand invites typos and inconsistency. [Zotero](https://www.zotero.org) plus the [Better BibTeX](https://retorque.re/zotero-better-bibtex/) plugin generates them for you:
+Typing citekeys and entries by hand invites typos and inconsistency. [Zotero](https://www.zotero.org) plus the [Better BibTeX](https://retorque.re/zotero-better-bibtex/) plugin generates both for you from a DOI:
 
 1. Install Zotero, then install Better BibTeX from its [releases page](https://retorque.re/zotero-better-bibtex/installation/) (download the `.xpi`, drag it into Zotero, or use Zotero's plugin manager).
 2. Open **Zotero → Settings → Better BibTeX → Citation Keys**, and set the **Citation Key Formula** to combine author, journal, and year — e.g. a formula built from `auth` + `journal` + `year` components. Better BibTeX's formula language changes syntax occasionally between versions, so build it in the live preview pane there and check the result against a known reference (it should produce `BraschScience2016` for that paper) before trusting it across your whole library.
-3. Right-click your library or a collection → **Export Library/Collection** → format **Better BibLaTeX** (or **Better BibTeX**) → check **Keep updated** so the `.bib` file regenerates automatically as you add references.
-4. Point `\addbibresource{...}` at that exported `.bib` file.
+3. Right-click your library or a collection → **Export Library/Collection** → format **Better BibTeX** (plain BibTeX output — this is the one that matches REVTeX/papers) → check **Keep updated** so the `.bib` file regenerates automatically as you add references.
+4. Point your paper's `\bibliography{...}` at that exported `.bib` file.
 
 Once set up, adding a paper to Zotero is the entire workflow — the citekey and `.bib` entry are generated for you, matching the convention above.
+
+## Beamer talks: `biblatex` + `biber` instead
+
+This is specific to slides, not papers. [`JqiNanoBeamerTemplate`](https://github.com/JQInanophotonics/JqiNanoBeamerTemplate) uses `biblatex` with the `biber` backend rather than plain `bibtex`:
+
+```latex
+\usepackage[backend=biber, style=numeric]{biblatex}
+\addbibresource{references.bib}
+...
+\printbibliography
+```
+Same citekey convention, same "just recompile with `latexmk` until it stabilizes" habit — `latexmk` detects `\addbibresource` and reruns `biber` instead of `bibtex` automatically. If exporting from Zotero for a Beamer talk specifically, use the **Better BibLaTeX** format instead of **Better BibTeX** in step 3 above.
 
 Next: [04 — VS Code setup](04-VSCodeSetup.md)

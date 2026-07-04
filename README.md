@@ -49,7 +49,7 @@ add the paper in Zotero → Better BibTeX generates the citekey → \cite{key} i
 | [00 — What is LaTeX, and why do we use it?](LaTeX/00-WhatIsLatex.md) | Markup vs. WYSIWYG, why the group uses it, Overleaf as a no-install alternative |
 | [01 — Installing LaTeX](LaTeX/01-Installing.md) | MacTeX, MiKTeX, TeX Live — per OS, verifying the install |
 | [02 — Compiling](LaTeX/02-Compiling.md) | pdflatex vs. xelatex vs. lualatex, `latexmk`, reading a compile error |
-| [03 — Bibliography and citations](LaTeX/03-BibliographyAndCitations.md) | biblatex/biber, the citekey convention, Zotero + Better BibTeX |
+| [03 — Bibliography and citations](LaTeX/03-BibliographyAndCitations.md) | BibTeX for papers (REVTeX), biblatex/biber for Beamer, the citekey convention, Zotero + Better BibTeX |
 | [04 — VS Code setup](LaTeX/04-VSCodeSetup.md) | LaTeX Workshop, SyncTeX (built-in tab viewer, or Skim/Zathura/SumatraPDF) |
 | [05 — Neovim setup](LaTeX/05-NeovimSetup.md) | vimtex + texlab, with real, copyable dotfiles included |
 | [06 — Syntax cheat sheet](LaTeX/06-SyntaxCheatSheet.md) | A minimal working document and the syntax to test your setup |
