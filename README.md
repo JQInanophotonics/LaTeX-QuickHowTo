@@ -75,8 +75,6 @@ LaTeX-QuickHowTo/
         └── tex-syntax.vim
 ```
 
-No binary assets — the `dotfiles/` folder is real, plain-text Neovim config (see [05](LaTeX/05-NeovimSetup.md)), same spirit as [QuickStartGit](https://github.com/JQInanophotonics/QuickStartGit)'s all-Markdown approach.
-
 ## See also
 
 Prerequisite for [ScientificPresentations](https://github.com/JQInanophotonics/ScientificPresentations) (build a talk in [JqiNanoBeamerTemplate](https://github.com/JQInanophotonics/JqiNanoBeamerTemplate) once you can compile) and for the future `ScientificWriting` (paper composition and citation practices). If you'll sync a paper through Overleaf, see [QuickStartGit](https://github.com/JQInanophotonics/QuickStartGit) for the Git side of that.
